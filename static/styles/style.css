@@ -1,0 +1,197 @@
+/* Style the video: 100% width and height to cover the entire window */
+#myVideo {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  min-width: 100%;
+  min-height: 100%;
+}
+
+.glow {
+  font-size: 60px;
+  color: #0f0f0f;
+  text-align: center;
+  -webkit-animation: glow 1s ease-in-out infinite alternate;
+  -moz-animation: glow 1s ease-in-out infinite alternate;
+  animation: glow 1s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #0ff;
+  }
+  to {
+    text-shadow: 0 0 20px #fff, 0 0 30px aqua, 0 0 40px aqua;
+  }
+}
+
+#headher {
+  z-index: -1;
+  box-shadow: 5px 10px 40px 30px #0ff;
+  color: #0f0f0f;
+  text-align: center;
+  -webkit-animation: glow1 1s ease-in-out infinite alternate;
+  -moz-animation: glow1 1s ease-in-out infinite alternate;
+  animation: glow1 1s ease-in-out infinite alternate;
+}
+@keyframes glow1 {
+  from {
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #0ff;
+  }
+  to {
+    text-shadow: 0 0 20px #fff, 0 0 30px aqua, 0 0 40px aqua;
+  }
+}
+/* in order: x offset, y offset, blur size, spread size, color */
+/* blur size and spread size are optional (they default to 0) */
+
+#btnhead {
+  box-shadow: 5px 10px 40px #0ff;
+  /* in order: x offset, y offset, blur size, spread size, color */
+  /* blur size and spread size are optional (they default to 0) */
+}
+#hfont {
+  font-family: "Roboto", sans-serif;
+}
+.dockHolder {
+  position: fixed;
+  text-align: center;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30px;
+  line-height: 30px;
+}
+
+.dock {
+  opacity: 0;
+  background: grey;
+  background: -o-linear-gradient(
+    top,
+    blue 0,
+    rgb(10, 2, 53) 49%,
+    blue 51%,
+    #808080 100%
+  );
+  background: -moz-linear-gradient(
+    top,
+    blue 0,
+    rgb(5, 0, 71) 49%,
+    blue 51%,
+    #808080 100%
+  );
+  background: -webkit-linear-gradient(
+    top,
+    blue 0,
+    rgb(5, 0, 73) 49%,
+    blue 51%,
+    #808080 100%
+  );
+  border: 1px solid gray;
+  max-width: 100%;
+  vertical-align: bottom;
+  line-height: 1em;
+  padding: 0 8px;
+  border-radius: 100%;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.dock:hover {
+  opacity: 1;
+}
+
+.dockItem {
+  display: inline;
+  height: 50px;
+  vertical-align: bottom;
+
+  transition-property: width, height;
+  -o-transition-property: width, height;
+  -ms-transition-property: width, height;
+  -moz-transition-property: width, height;
+  -webkit-transition-property: width, height;
+  transition-duration: 0.25s;
+  -o-transition-duration: 0.25s;
+  -ms-transition-duration: 0.25s;
+  -moz-transition-duration: 0.25s;
+  -webkit-transition-duration: 0.25s;
+  transition-timing-function: ease-in-out;
+  -o-transition-timing-function: ease-in-out;
+  -ms-transition-timing-function: ease-in-out;
+  -moz-transition-timing-function: ease-in-out;
+  -webkit-transition-timing-function: ease-in-out;
+}
+.dockItem:hover {
+  height: 60px;
+}
+.dockItem:active {
+  height: 57px;
+}
+
+.dockLeftHolder {
+  position: fixed;
+  text-align: center;
+  top: 0;
+  left: 0;
+  right: 100%;
+  height: 1px;
+  line-height: 2px;
+}
+
+.Leftdock {
+  opacity: 0;
+  /* background:grey;
+    background:
+        -o-linear-gradient(left, blue 0, rgb(10, 2, 53) 49%, blue 51%, #808080 100%);
+    background:
+        -moz-linear-gradient(left, blue 0, rgb(5, 0, 71) 49%, blue 51%, #808080 100%);
+    background:
+        -webkit-linear-gradient(left, blue 0, rgb(5, 0, 73) 49%, blue 51%, #808080 100%); */
+  /* border: 1px solid rgb(2, 2, 75);
+    max-width:100%;
+    vertical-align: left; */
+  /* line-height: 1em;
+    padding: 0 8px;
+    border-radius: 100%;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;  */
+  max-height: 100%;
+  vertical-align: left;
+}
+
+.Leftdock:hover {
+  opacity: 1;
+}
+
+.leftDockItem {
+  /* display: inline; */
+  height: 50px;
+  vertical-align: 0px;
+  align-items: center;
+
+  transition-property: width, height;
+  -o-transition-property: width, height;
+  -ms-transition-property: width, height;
+  -moz-transition-property: width, height;
+  -webkit-transition-property: width, height;
+  transition-duration: 0.25s;
+  -o-transition-duration: 0.25s;
+  -ms-transition-duration: 0.25s;
+  -moz-transition-duration: 0.25s;
+  -webkit-transition-duration: 0.25s;
+  transition-timing-function: ease-in-out;
+  -o-transition-timing-function: ease-in-out;
+  -ms-transition-timing-function: ease-in-out;
+  -moz-transition-timing-function: ease-in-out;
+  -webkit-transition-timing-function: ease-in-out;
+}
+.leftDockItem:hover {
+  height: 60px;
+}
+.leftDockItem:active {
+  height: 57px;
+}
