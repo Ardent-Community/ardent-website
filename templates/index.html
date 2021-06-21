@@ -9,31 +9,16 @@
   <title>The Ardent Community</title>
 
   <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
-  <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&display=swap" rel="stylesheet">
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-  <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Bigshot+One&display=swap" rel="stylesheet">
+
   <link rel="stylesheet"
     href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
   <link rel="stylesheet"
     href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
-  <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Limelight&display=swap" rel="stylesheet">
-  <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Odibee+Sans&display=swap" rel="stylesheet">
-  <link rel="preconnect" href="https://fonts.gstatic.com">
   <link rel="shortcut icon" type="image/jpeg" href="../static/images/logoard.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Odibee+Sans&family=Ubuntu&display=swap" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
-  <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Limelight&display=swap" rel="stylesheet">
-  <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Roboto:wght@700&display=swap"
-    rel="stylesheet">
   <link
     href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Fira+Sans&family=Indie+Flower&family=Kalam&family=Limelight&family=Pacifico&family=Pattaya&family=Roboto+Slab:wght@300&family=Rubik&family=Squada+One&family=Staatliches&display=swap"
     rel="stylesheet">
@@ -42,7 +27,8 @@
 
 
 <body>
-  <img id="myVideo" src="../static/images/bg.jpeg" alt="">
+  <img id="myVideo" src="{{ url_for('static', filename='images/bg.jpeg') }}" alt="background">
+
   <section id='headher' class="text-gray-400 bg-gray-900 body-font">
     <div class="container mx-auto flex px-3 py-24 items-center justify-center flex-col">
       <img class="lg:w-2/6 md:w-3/6 w-5/6 mb-10 object-cover object-center rounded" alt="hero"
@@ -64,23 +50,24 @@
       </div>
     </div>
   </section>
-  <br>
-  <br>
+
+
   <div class="dockHolder" style="height:128px;line-height:128px;">
     <span class="dock">
-      <img id='btnhead' class="dockItem" src="../static/images/home.png">
-      <img id='btnhead' class="dockItem" src="../static/images/solution.png" />
-      <img id='btnhead' class="dockItem" src="../static/images/aboutus.png" />
-      <img id='btnhead' class="dockItem" src="../static/images/contact.png" />
-      <img id='btnhead' class="dockItem" src="../static/images/logoard.png" />
+      <img id='btnhead' class="dockItem" src=" {{ url_for('static', filename='images/home.png') }}">
+      <img id='btnhead' class="dockItem" src=" {{ url_for('static', filename='images/solution.png') }}" />
+      <img id='btnhead' class="dockItem" src=" {{ url_for('static', filename='images/aboutus.png') }}" />
+      <img id='btnhead' class="dockItem" src=" {{ url_for('static', filename='images/contact.png') }}" />
+      <img id='btnhead' class="dockItem" src=" {{ url_for('static', filename='images/logoard.png') }}" />
     </span>
   </div>
+
   <div id='btnhead' class="dockLeftHolder" style="height:128px;line-height:128px;">
     <span class="Leftdock">
-      <img class="leftDockItem" src="../static/images/logoard.png">
-      <img class="leftDockItem" src="../static/images/logoard.png" />
-      <img class="leftDockItem" src="../static/images/logoard.png" />
-      <img class="leftDockItem" src="../static/images/logoard.png" />
+      <img class="leftDockItem" src=" {{ url_for('static', filename='images/logoard.png') }}">
+      <img class="leftDockItem" src=" {{ url_for('static', filename='images/logoard.png') }}" />
+      <img class="leftDockItem" src=" {{ url_for('static', filename='images/logoard.png') }}" />
+      <img class="leftDockItem" src=" {{ url_for('static', filename='images/logoard.png') }}" />
     </span>
   </div>
 
