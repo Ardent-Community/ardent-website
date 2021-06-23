@@ -3,10 +3,10 @@ from dbms import SQLite3DatabaseHandler
 import os
 
 """
-to setup environment variable 
+* to setup environment variable, execute:
 $ export PROBE_API_KEY='supersecretkey'
 
-check
+* check if the env variable got set
 $ echo $PROBE_API_KEY 
 """
 
@@ -16,10 +16,12 @@ db = SQLite3DatabaseHandler('solutions.db')
 
 # TODO: add solution accepting api
 
+########################## WEBSITE #################################
 
 @app.get("/")
 def home():
     return render_template('index.html')
+
 
 ########################## API #################################
 
@@ -30,14 +32,14 @@ def add_solution(username: str, language: str, code: str):
 
 
 def get_challenge_solution_data(number):
-    data = {}
+    data = {"solutions":{}}
     try:
         solutions = db.get_values(number)
     except:
         abort(400)
 
     for solution in solutions:
-        data[solution[0]] = {
+        data["solutions"][solution[0]] = {
             "language": solution[1],
             "code": solution[2]
         }
