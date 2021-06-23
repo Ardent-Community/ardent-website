@@ -2,6 +2,14 @@ from flask import Flask, render_template, jsonify, request, abort
 from dbms import SQLite3DatabaseHandler
 import os
 
+"""
+to setup environment variable 
+$ export PROBE_API_KEY='supersecretkey'
+
+check
+$ echo $PROBE_API_KEY 
+"""
+
 
 app = Flask(__name__)
 db = SQLite3DatabaseHandler('solutions.db')
