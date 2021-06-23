@@ -23,12 +23,13 @@ def home():
 
 ########################## API #################################
 
-def add_solution(username:str, language:str, code:str):
+
+def add_solution(username: str, language: str, code: str):
     """Adds the given information to the database"""
     db.insert_values(1, username, language, code)
 
 
-def get_challenge_sollution_data(number):
+def get_challenge_solution_data(number):
     data = {}
     try:
         solutions = db.get_values(number)
@@ -40,21 +41,21 @@ def get_challenge_sollution_data(number):
             "language": solution[1],
             "code": solution[2]
         }
-    
+
     return data
 
 
 @app.get('/api/solutions/<int:number>')
 def get_challenge_sollution(number):
-    if request.args.get('probe_api_key') == os.environ["PROBE_API_KEY"]:
-        return jsonify(get_challenge_sollution_data(number))
+    if request.args.get('apiKey') == os.environ["PROBE_API_KEY"]:
+        return jsonify(get_challenge_solution_data(number))
 
     abort(404)
 
 
 @app.errorhandler(404)
 def page_not_found(error):  # TODO: better error handelling needed
-   return jsonify({"response_code": 404})
+    return jsonify({"response_code": 404})
 
 
 @app.errorhandler(400)
@@ -63,4 +64,4 @@ def no_data(error):  # TODO: better error handelling needed
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=8080)
+    app.run(debug=True)
