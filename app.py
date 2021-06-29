@@ -32,7 +32,7 @@ def add_solution(username: str, language: str, code: str):
 
 
 def get_challenge_solution_data(number):
-    data = {'solutions':{}}
+    data = {'ok': True, 'solutions':{}, 'error': '', 'message':''}
     try:
         solutions = db.get_values(number)
     except Exception as e:
