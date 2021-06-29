@@ -18,10 +18,12 @@ class SQLite3DatabaseHandler():
 
     def create_table(self, challenge_num,
                      schema="username varchr(37) PRIMARY KEY UNIQUE, language varchar(16) NOT NULL, code varchar(250) NOT NULL"):
+
         with self.connect() as db:
             cursor = db.cursor()
 
-            cursor.execute(f"CREATE TABLE solution{challenge_num} ({schema})")
+            cursor.execute(
+                f"CREATE TABLE IF NOT EXISTS solution{challenge_num}  ({schema})")
             db.commit()
 
     def insert_values(self, challenge_num, uname, language, code):
@@ -41,10 +43,12 @@ class SQLite3DatabaseHandler():
 
 
 if __name__ == "__main__":
-    db = SQLite3DatabaseHandler('solutions.db')
+    db = SQLite3DatabaseHandler('solutions1.db')
 
     print(db.create_table(1))
     print(db.get_tables())
-    print(db.insert_values(1, 'yy', 'py', 'print("hello")'))
-    print(db.insert_values(1, 'sh', 'js', 'console.log("hola")'))
+    print(db.insert_values(1, 'user1', 'python', 'def solution(n):\n\treturn n * n'))
+    print(db.insert_values(1, 'user2', 'javascript', 'const solution = () => {return n * n}'))
+    print(db.insert_values(1, 'user3', 'javascript', 'const solution = () => {return n * n * n}'))
+    print(db.insert_values(1, 'user4', 'python', 'def solution(n):\n\treturn n * n/n'))
     print(db.get_values(1))

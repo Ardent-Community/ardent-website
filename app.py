@@ -35,7 +35,8 @@ def get_challenge_solution_data(number):
     data = {"solutions":{}}
     try:
         solutions = db.get_values(number)
-    except:
+    except Exception as e:
+        print(e)
         abort(400)
 
     for solution in solutions:
@@ -66,4 +67,4 @@ def no_data(error):  # TODO: better error handelling needed
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, use_reloader=False)
