@@ -1,0 +1,17 @@
+{
+    "ok": true,
+    "solutions": {
+        "sh": {
+            "code": "console.log(\"hola\")",
+            "language": "js"
+        },
+        "uname": {
+            "code": "code",
+            "language": "language"
+        },
+        "yy": {
+            "code": "print(\"hello\")",
+            "language": "py"
+        }
+    }
+}

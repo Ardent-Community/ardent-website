@@ -32,12 +32,15 @@ def add_solution(username: str, language: str, code: str):
 
 
 def get_challenge_solution_data(number):
-    data = {"solutions":{}}
+    data = {'solutions':{}}
     try:
         solutions = db.get_values(number)
     except Exception as e:
         print(e)
-        abort(400)
+        data['ok'] = False
+        data['message'] = "Data not found"
+        data['error'] = f"Unable to find solutions to challenge {number}"
+        return jsonify(data)
 
     for solution in solutions:
         data["solutions"][solution[0]] = {
@@ -45,15 +48,26 @@ def get_challenge_solution_data(number):
             "code": solution[2]
         }
 
+    data['ok'] = bool(data['solutions'])
+
+    if not data['ok']:
+        data['message'] = 'No Data for the challenge'
+        data['error'] = f"No data in the database for the challenge {number}"
+
     return data
 
 
 @app.get('/api/solutions/<int:number>')
 def get_challenge_sollution(number):
-    if request.args.get('apiKey') == os.environ["PROBE_API_KEY"]:
+    if request.headers.get('API-KEY') == os.environ["PROBE_API_KEY"] and request.headers.get('User-Agent') == 'probe-cli':
         return jsonify(get_challenge_solution_data(number))
-
-    abort(404)
+    else:
+        return jsonify({
+            'ok': False,
+            'message': "Access denied",
+            'error': "Unable to recognize the User-Agent, check the API key",
+            'solutions': {}
+        })
 
 
 @app.errorhandler(404)
