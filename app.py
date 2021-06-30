@@ -1,5 +1,6 @@
-from flask import Flask, render_template, jsonify, request, abort
+from flask import Flask, render_template, jsonify, redirect, request, session
 from dbms import SQLite3DatabaseHandler
+from oauth import OAuth2
 import os
 
 """
@@ -13,14 +14,28 @@ $ echo $PROBE_API_KEY
 
 app = Flask(__name__)
 db = SQLite3DatabaseHandler('solutions.db')
-
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 # TODO: add solution accepting api
 
 ########################## WEBSITE #################################
 
 @app.get("/")
 def home():
-    return render_template('index.html')
+    code = request.args.get("code")
+
+    authentication_token = OAuth2.get_access_token(code)
+    session["token"] = authentication_token
+
+    user = OAuth2.get_user_json(authentication_token)
+    # user_name, user_id = user.get("username"), user.get("discriminator")
+
+    return f"Success, logged in as {user}"
+    # return render_template('index.html')
+
+
+@app.get("/login")
+def redirect_to_discord():
+    return redirect(OAuth2.DISCORD_LOGIN_URL)
 
 
 ########################## API #################################
