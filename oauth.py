@@ -2,9 +2,9 @@ import requests
 import os 
 
 class OAuth2:
-    DISCORD_LOGIN_URL = os.environ('DISCORD_LOGIN_URL')  # the login redirect url
-    CLIENT_ID = os.environ('CLIENT_ID')
-    CLIENT_SECRET = os.environ('CLIENT_SECRET')
+    DISCORD_LOGIN_URL = os.environ['DISCORD_LOGIN_URL']  # the login redirect url
+    CLIENT_ID = os.environ['CLIENT_ID']
+    CLIENT_SECRET = os.environ['CLIENT_SECRET']
     REDIRECT_URL = "http://127.0.0.1:5000/login"
     SCOPE = "identify"  # all the scopes separeted by `%20`
     DISCORD_TOKEN_URL = "https://discord.com/api/oauth2/token"
