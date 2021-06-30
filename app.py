@@ -61,6 +61,7 @@ def get_challenge_solution_data(number):
 def get_challenge_sollution(number):
     if request.headers.get('API-KEY') == os.environ["PROBE_API_KEY"] and request.headers.get('User-Agent') == 'probe-cli':
         return jsonify(get_challenge_solution_data(number))
+
     else:
         return jsonify({
             'ok': False,
@@ -79,6 +80,10 @@ def page_not_found(error):  # TODO: better error handelling needed
 def no_data(error):  # TODO: better error handelling needed
     return jsonify({"response_code": 400, "status": "NO data"})
 
+@app.errorhandler(500)
+def internal_server_error(error):  # TODO: better error handelling needed
+    return jsonify({"response_code": 500, "status": "NO data"})
+
 
 if __name__ == '__main__':
-    app.run(debug=True, use_reloader=False)
+    app.run(debug=True)

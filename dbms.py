@@ -43,12 +43,16 @@ class SQLite3DatabaseHandler():
 
 
 if __name__ == "__main__":
-    db = SQLite3DatabaseHandler('solutions1.db')
+    db = SQLite3DatabaseHandler('solutions.db')
 
     print(db.create_table(1))
     print(db.get_tables())
-    print(db.insert_values(1, 'user1', 'python', 'def solution(n):\n\treturn n * n'))
-    print(db.insert_values(1, 'user2', 'javascript', 'const solution = () => {return n * n}'))
-    print(db.insert_values(1, 'user3', 'javascript', 'const solution = () => {return n * n * n}'))
-    print(db.insert_values(1, 'user4', 'python', 'def solution(n):\n\treturn n * n/n'))
+    # (db.insert_values(1, 'user1', 'python',
+    #       'def solution(n):\n\treturn n * n'))
+    # (db.insert_values(1, 'user2', 'javascript',
+    #       'const solution = () => {return n * n}'))
+    # (db.insert_values(1, 'user3', 'javascript',
+    #       'const solution = () => {return n * n * n}'))
+    # (db.insert_values(1, 'user4', 'python',
+    #       'def solution(n):\n\treturn n * n/n'))
     print(db.get_values(1))
