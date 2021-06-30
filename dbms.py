@@ -47,12 +47,14 @@ if __name__ == "__main__":
 
     print(db.create_table(1))
     print(db.get_tables())
-    (db.insert_values(1, 'user1', 'python',
-          'def solution(n):\n\tprint(n * n)'))
-    (db.insert_values(1, 'user2', 'javascript',
-          'const solution = (n) => {console.log(n * n)}'))
-    (db.insert_values(1, 'user3', 'javascript',
-          'const solution = (n) => {console.log(n * n * n)}'))
-    (db.insert_values(1, 'user5', 'python',
-          'import os\ndef solution(n):\n\tprint(n * n/n)'))
+    
+    db.insert_values(1, 'user1', 'python',
+                     'def solution(n):\n\tprint(n * n)')
+    db.insert_values(1, 'user2', 'javascript',
+                     'const solution = (n) => {console.log(n * n)}')
+    db.insert_values(1, 'user3', 'javascript',
+                     'const solution = (n) => {console.log(n * n * n)}')
+    db.insert_values(1, 'user5', 'python',
+                     'import os\ndef solution(n):\n\tprint(n * n/n)')
+
     print(db.get_values(1))
