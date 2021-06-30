@@ -5,7 +5,7 @@ class OAuth2:
     DISCORD_LOGIN_URL = os.environ['DISCORD_LOGIN_URL']  # the login redirect url
     CLIENT_ID = os.environ['CLIENT_ID']
     CLIENT_SECRET = os.environ['CLIENT_SECRET']
-    REDIRECT_URL = "http://127.0.0.1:5000/login"
+    REDIRECT_URL = "https://discord.com/"
     SCOPE = "identify"  # all the scopes separeted by `%20`
     DISCORD_TOKEN_URL = "https://discord.com/api/oauth2/token"
     DISCORD_API_URL = "https://discord.com/api"
@@ -18,10 +18,13 @@ class OAuth2:
             "grant_type": "authorization_code",
             "code": code,
             "redirect_uri": OAuth2.REDIRECT_URL,
-            "scope": OAuth2.SCOPE
+            # "scope": OAuth2.SCOPE
         }
- 
-        access_token = requests.post(url = OAuth2.DISCORD_TOKEN_URL, data = payload).json()
+
+        headers = {"Content-Type": 'application/x-www-form-urlencoded'}
+
+        access_token = requests.post(url=OAuth2.DISCORD_TOKEN_URL, data=payload, headers=headers).json()
+        print(access_token)
         return access_token.get("access_token")
 
     @staticmethod
