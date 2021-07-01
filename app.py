@@ -34,7 +34,7 @@ def token_updater(token):
 
 @app.route("/")
 def home():
-    code = request.args.get("code")
+    pass
     
     
 
