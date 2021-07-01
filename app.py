@@ -1,8 +1,20 @@
 from flask import Flask, render_template, jsonify, redirect, request, session
 from dbms import SQLite3DatabaseHandler
-from oauth import OAuth2
+from requests_oauthlib import OAuth2Session
+import getpass
 import os
 
+
+os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+
+# Settings for your app
+base_discord_api_url = 'https://discordapp.com/api'
+client_id = r'1234567890' # Get from https://discordapp.com/developers/applications
+
+redirect_uri='https://example.com:8000/oauth_callback'
+scope = ['identify', 'email']
+token_url = 'https://discordapp.com/api/oauth2/token'
+authorize_url = 'https://discordapp.com/api/oauth2/authorize'
 """
 * to setup environment variable, execute:
 $ export PROBE_API_KEY='supersecretkey'
@@ -23,19 +35,16 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 def home():
     code = request.args.get("code")
 
-    authentication_token = OAuth2.get_access_token(code)
-    session["token"] = authentication_token
+    
 
-    user = OAuth2.get_user_json(authentication_token)
-    # user_name, user_id = user.get("username"), user.get("discriminator")
-
-    return f"Success, logged in as {user}"
-    # return render_template('index.html')
+    
+    return render_template('index.html')
 
 
 @app.get("/login")
 def redirect_to_discord():
-    return redirect(OAuth2.DISCORD_LOGIN_URL)
+    pass
+    
 
 
 ########################## API #################################
