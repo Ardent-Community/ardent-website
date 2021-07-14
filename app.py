@@ -89,15 +89,6 @@ def oauth_callback():
     )
     session['discord_token'] = token
     
-    return redirect('/profile')
-    
-    
-@app.route("/profile")
-def profile():
-    """
-    Example profile page to demonstrate how to pull the user information
-    once we have a valid access token after all OAuth negotiation.
-    """
     global response
     discord = OAuth2Session(client_id, token=session['discord_token'])
     response = discord.get(base_discord_api_url + '/users/@me')
@@ -114,12 +105,11 @@ def profile():
     picture_url = get_avatar+response.json()["id"]+'/'+picture 
     
     user = User(
-    id_=unique_id, name=users_name, email=users_email, profile_pic_url=picture_url, discriminator=discriminator,
-)
-
+    id_=unique_id, name=users_name, email=users_email, profile_pic_url=picture_url, discriminator=discriminator,)
+    
 # Doesn't exist? Add it to the database.
     if not User.get(unique_id):
-        User.create(unique_id, users_name, users_email, picture)
+        User.create(unique_id, users_name, users_email, picture, discriminator)
 
 # Begin user session by logging the user in
     login_user(user)
@@ -197,4 +187,4 @@ def internal_server_error(error):  # TODO: better error handelling needed
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')
