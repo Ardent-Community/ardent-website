@@ -10,24 +10,20 @@ from flask_login import (
     logout_user,
 )
 import sqlite3
-
+from login_db import init_db_command
+from user import User
 
 get_avatar='https://cdn.discordapp.com/avatars/'
 # Settings for your app
 base_discord_api_url = 'https://discordapp.com/api'
 client_id = os.environ['ID'] # Get from https://discordapp.com/developers/applications
 discordkey= os.environ['SECRET']
-redirect_uri='http://192.168.1.78:5000/oauth_callback'
+redirect_uri='http://192.168.43.234:5000/oauth_callback'
 scope = ['identify']
 token_url = 'https://discordapp.com/api/oauth2/token'
 authorize_url = 'https://discordapp.com/api/oauth2/authorize'
 
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
-
-def is_logged_in():
-    pass
-    
-
 
 app = Flask(__name__)
 db = SQLite3DatabaseHandler('solutions.db')
@@ -37,7 +33,19 @@ app.config['SECRET_KEY']=discordkey
 def token_updater(token):
     session['oauth2_token'] = token
 
+login_manager = LoginManager()
+login_manager.init_app(app)
 
+# Naive database setup
+try:
+    init_db_command()
+except sqlite3.OperationalError:
+    # Assume it's already been created
+    pass
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.get(user_id)
 
 
 ########################## WEBSITE #################################
@@ -71,17 +79,17 @@ def oauth_callback():
     The token is stored in a session variable, so it can
     be reused across separate web requests.
     """
-    disco_token = OAuth2Session(client_id, redirect_uri=redirect_uri, state=session['state'], scope=scope)
+    discord_token = OAuth2Session(client_id, redirect_uri=redirect_uri, state=session['state'], scope=scope)
     
     
-    token = disco_token.fetch_token(
+    token = discord_token.fetch_token(
         token_url,
         client_secret=discordkey,
         authorization_response=request.url,
     )
     session['discord_token'] = token
     
-    return redirect('/')
+    return redirect('/profile')
     
     
 @app.route("/profile")
@@ -92,9 +100,39 @@ def profile():
     """
     global response
     discord = OAuth2Session(client_id, token=session['discord_token'])
-    response = discord.get(base_discord_api_url + '/users/@me').json()
+    response = discord.get(base_discord_api_url + '/users/@me')
     # https://discordapp.com/developers/docs/resources/user#user-object-user-structure
-    return 'Profile: %s' % response['id']
+    if response.json()['verified']==True:
+        unique_id = response.json()["id"]
+        users_email = response.json()["email"]
+        picture = response.json()["avatar"]
+        users_name = response.json()["username"]
+        discriminator = response.json()["discriminator"]
+    else:
+        return "User email not available or not verified by Discord.", 400
+    
+    picture_url = get_avatar+response.json()["id"]+'/'+picture 
+    
+    user = User(
+    id_=unique_id, name=users_name, email=users_email, profile_pic_url=picture_url, discriminator=discriminator,
+)
+
+# Doesn't exist? Add it to the database.
+    if not User.get(unique_id):
+        User.create(unique_id, users_name, users_email, picture)
+
+# Begin user session by logging the user in
+    login_user(user)
+
+# Send user back to homepage
+    return redirect(url_for("index"))
+
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for("index"))
 
 ########################## API #################################
 
