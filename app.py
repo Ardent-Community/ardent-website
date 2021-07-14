@@ -9,9 +9,9 @@ from flask_login import (
     login_user,
     logout_user,
 )
-import sqlite3
-from login_db import init_db_command
+
 from user import User
+from dbms import makelogindb
 
 get_avatar='https://cdn.discordapp.com/avatars/'
 # Settings for your app
@@ -35,12 +35,9 @@ def token_updater(token):
 
 login_manager = LoginManager()
 login_manager.init_app(app)
-
-# Naive database setup
 try:
-    init_db_command()
-except sqlite3.OperationalError:
-    # Assume it's already been created
+    makelogindb()
+except Exception as e:
     pass
 
 @login_manager.user_loader
@@ -53,8 +50,17 @@ def load_user(user_id):
 @app.route("/")
 def home():
     
-    return render_template ('tabbed.html')
-    
+    if current_user.is_authenticated:
+        return (
+            "<p>Hello, {}! You're logged in! Email: {}</p>"
+            "<div><p>Discord Avatar:</p>"
+            '<img src="{}" alt="Discord avatar"></img></div>'
+            '<a class="button" href="/logout">Logout</a>'.format(
+                current_user.name, current_user.email, current_user.profile_pic_url
+            )
+        )
+    else:
+        return '<a class="button" href="/login">Discord Login</a>'
     
     
     
@@ -102,27 +108,27 @@ def oauth_callback():
     else:
         return "User email not available or not verified by Discord.", 400
     
-    picture_url = get_avatar+response.json()["id"]+'/'+picture 
+    picture_url = get_avatar+unique_id+'/'+picture 
     
     user = User(
-    id_=unique_id, name=users_name, email=users_email, profile_pic_url=picture_url, discriminator=discriminator,)
+    id_=unique_id, name=users_name, discriminator=discriminator, email=users_email, profile_pic_url=picture_url)
     
 # Doesn't exist? Add it to the database.
     if not User.get(unique_id):
-        User.create(unique_id, users_name, users_email, picture, discriminator)
+        User.create(unique_id,users_name, discriminator, users_email, picture_url)
 
 # Begin user session by logging the user in
     login_user(user)
 
 # Send user back to homepage
-    return redirect(url_for("index"))
+    return redirect('/')
 
 
 @app.route("/logout")
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for("index"))
+    return redirect(url_for("home"))
 
 ########################## API #################################
 
