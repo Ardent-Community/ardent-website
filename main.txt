@@ -1,1 +1,5 @@
 https://discord.com/api/oauth2/authorize?client_id=860041385659203604&redirect_uri=https%3A%2F%2F192.168.1.78%3A5000%2Foauth_callback&response_type=code&scope=identify%20email
+
+
+
+https://cdn.discordapp.com/avatars/811591623242154046/ae1c70e64f057571205293580cb53ad0.png?size=1024

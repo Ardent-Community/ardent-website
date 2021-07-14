@@ -1,11 +1,18 @@
 from flask import Flask, render_template, jsonify, redirect, request, session, url_for
 from dbms import SQLite3DatabaseHandler
 from requests_oauthlib import OAuth2Session
-import getpass
 import os
+from flask_login import (
+    LoginManager,
+    current_user,
+    login_required,
+    login_user,
+    logout_user,
+)
+import sqlite3
 
 
-
+get_avatar='https://cdn.discordapp.com/avatars/'
 # Settings for your app
 base_discord_api_url = 'https://discordapp.com/api'
 client_id = os.environ['ID'] # Get from https://discordapp.com/developers/applications
@@ -17,6 +24,9 @@ authorize_url = 'https://discordapp.com/api/oauth2/authorize'
 
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
+def is_logged_in():
+    pass
+    
 
 
 app = Flask(__name__)
@@ -34,13 +44,15 @@ def token_updater(token):
 
 @app.route("/")
 def home():
-    pass
+    
+    return render_template ('tabbed.html')
     
     
-
+    
     
 @app.route("/login")
 def login():
+    
     oauth = OAuth2Session(client_id, redirect_uri=redirect_uri, scope=scope)
     login_url, state = oauth.authorization_url(authorize_url)
     session['state'] = state
@@ -59,15 +71,17 @@ def oauth_callback():
     The token is stored in a session variable, so it can
     be reused across separate web requests.
     """
-    discord = OAuth2Session(client_id, redirect_uri=redirect_uri, state=session['state'], scope=scope)
-    token = discord.fetch_token(
+    disco_token = OAuth2Session(client_id, redirect_uri=redirect_uri, state=session['state'], scope=scope)
+    
+    
+    token = disco_token.fetch_token(
         token_url,
         client_secret=discordkey,
         authorization_response=request.url,
     )
     session['discord_token'] = token
     
-    return redirect(url_for('.profile'))
+    return redirect('/')
     
     
 @app.route("/profile")
@@ -76,11 +90,11 @@ def profile():
     Example profile page to demonstrate how to pull the user information
     once we have a valid access token after all OAuth negotiation.
     """
+    global response
     discord = OAuth2Session(client_id, token=session['discord_token'])
     response = discord.get(base_discord_api_url + '/users/@me').json()
     # https://discordapp.com/developers/docs/resources/user#user-object-user-structure
-    return jsonify(user=response)
-
+    return 'Profile: %s' % response['id']
 
 ########################## API #################################
 
