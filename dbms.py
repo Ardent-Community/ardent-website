@@ -69,7 +69,7 @@ def makelogindb():
     cursor = conn.cursor()
 
 #Doping EMPLOYEE table if already exists.
-    cursor.execute("DROP TABLE IF EXISTS EMPLOYEE")
+    cursor.execute("DROP TABLE IF EXISTS user")
 
 #Creating table as per requirement
     sql ="""CREATE TABLE user (

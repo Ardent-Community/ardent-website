@@ -22,7 +22,7 @@ redirect_uri='http://192.168.43.234:5000/oauth_callback'
 scope = ['identify']
 token_url = 'https://discordapp.com/api/oauth2/token'
 authorize_url = 'https://discordapp.com/api/oauth2/authorize'
-
+seed=os.environ['CODE']
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 app = Flask(__name__)
