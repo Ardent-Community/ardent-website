@@ -1,14 +1,11 @@
 import sqlite3
 from encrypt import Encrypt
 
- 
- 
- 
 class Apikey():
     
     def __init__(self, db):
         self.db = db
-        self.schema="""CREATE TABLE apikey (id TEXT PRIMARY KEY,key TEXT UNIQUE NOT NULL);"""
+        
         self.make_table()
         
     def api_db_connect(self):
@@ -16,18 +13,21 @@ class Apikey():
     
     #make a table to store the api keys
     def make_table(self):
-        with self.api_db_connect as db:
+        schema="""CREATE TABLE IF NOT EXISTS apikey 
+        (id TEXT PRIMARY KEY,
+        key TEXT UNIQUE NOT NULL);"""
+        with self.api_db_connect() as db:
             c = db.cursor()
-            c.execute(f"CREATE TABLE IF NOT EXISTS apikey{self.schema}")
+            c.execute(schema)
             db.commit()
             
     #use the uid to generate the new api key using a lot of maths
     
-    def generateAndAdd_api_key(self, seed, uid):
-        key = Encrypt(uid, seed)
+    def generateAndAdd_api_key(self, uid, seed):
+        key = Encrypt(str(uid), str(seed))
         #add the api key to the database
         
-        with self.api_db_connect as db:
+        with self.api_db_connect() as db:
             c= db.cursor()
             c.execute("INSERT INTO apikey (id, key) "
             "VALUES (?, ?)",
@@ -40,12 +40,12 @@ class Apikey():
     
     def get_(self, key):
         with self.api_db_connect() as db:
-            c=db.cursor()
-            userkey = c.execute(f"SELECT * FROM apikey WHERE  key = {key}").fetchnone()
+            
+            userkey = db.execute("SELECT * FROM apikey WHERE key = ?", (key,)).fetchall()
             if not userkey:
                 return None
             
-            uid_ = userkey[0]
+            uid_ = userkey[0][0]
             return uid_
             
             
@@ -54,7 +54,7 @@ class Apikey():
     def exists_(self, uid):
         with self.api_db_connect() as db:
             c=db.cursor()
-            userid = c.execute(f"SELECT * FROM apikey WHERE  id = {uid}").fetchnone()
+            userid = c.execute(f"SELECT * FROM apikey WHERE  id = {uid}").fetchall()
             if not userid: return False
             else: return True
             
