@@ -58,4 +58,13 @@ class Apikey():
             if not userid: return False
             else: return True
             
+    # write a function to delte an apikey from the database      
+    def delete(self, uid):
+        uid_= str(uid)
+        delquery =f"""DELETE FROM apikey WHERE id={uid_};"""
+        with self.api_db_connect() as db:
+            c=db.cursor()
+            c.execute(delquery)
+        
+            
        
