@@ -59,9 +59,9 @@ def home():
 #                 current_user.name, current_user.email, current_user.profile_pic_url
 #             )
 #         )
-          return render_template('tabbed.html')  # TODO: make it look like you are loged in
+          return render_template('index.html')  # TODO: make it look like you are loged in
     else:
-        return render_template('tabbed.html')
+        return render_template('index.html')
     
     
     
