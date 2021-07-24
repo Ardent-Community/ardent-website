@@ -1,42 +1,134 @@
-from flask import Flask, render_template, jsonify, redirect, request, session
+from flask import Flask, render_template, jsonify, redirect, request, session, url_for
 from dbms import SQLite3DatabaseHandler
-from oauth import OAuth2
+from requests_oauthlib import OAuth2Session
 import os
+from flask_login import (
+    LoginManager,
+    current_user,
+    login_required,
+    login_user,
+    logout_user,
+)
 
-"""
-* to setup environment variable, execute:
-$ export PROBE_API_KEY='supersecretkey'
+from user import User
+from dbms import makelogindb
 
-* check if the env variable got set
-$ echo $PROBE_API_KEY 
-"""
-
+get_avatar='https://cdn.discordapp.com/avatars/'
+# Settings for your app
+base_discord_api_url = 'https://discordapp.com/api'
+client_id = os.environ['ID'] # Get from https://discordapp.com/developers/applications
+discordkey= os.environ['SECRET']
+redirect_uri='http://192.168.43.234:5000/oauth_callback'
+scope = ['identify']
+token_url = 'https://discordapp.com/api/oauth2/token'
+authorize_url = 'https://discordapp.com/api/oauth2/authorize'
+seed=os.environ['CODE']
+os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 app = Flask(__name__)
 db = SQLite3DatabaseHandler('solutions.db')
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+app.config['SECRET_KEY']=discordkey
 # TODO: add solution accepting api
+
+def token_updater(token):
+    session['oauth2_token'] = token
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+try:
+    makelogindb()
+except Exception as e:
+    pass
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.get(user_id)
+
 
 ########################## WEBSITE #################################
 
-@app.get("/")
+@app.route("/")
 def home():
-    code = request.args.get("code")
+    
+    if current_user.is_authenticated:
+        return (
+            "<p>Hello, {}! You're logged in! Email: {}</p>"
+            "<div><p>Discord Avatar:</p>"
+            '<img src="{}" alt="Discord avatar"></img></div>'
+            '<a class="button" href="/logout">Logout</a>'.format(
+                current_user.name, current_user.email, current_user.profile_pic_url
+            )
+        )
+    else:
+        return '<a class="button" href="/login">Discord Login</a>'
+    
+    
+    
+@app.route("/login")
+def login():
+    
+    oauth = OAuth2Session(client_id, redirect_uri=redirect_uri, scope=scope)
+    login_url, state = oauth.authorization_url(authorize_url)
+    session['state'] = state
+    print("Login url: %s" % login_url)
+    return redirect(login_url)
 
-    authentication_token = OAuth2.get_access_token(code)
-    session["token"] = authentication_token
 
-    user = OAuth2.get_user_json(authentication_token)
-    # user_name, user_id = user.get("username"), user.get("discriminator")
+@app.route("/oauth_callback")
+def oauth_callback():
+    """
+    The callback we specified in our app.
+    Processes the code given to us by Discord and sends it back
+    to Discord requesting a temporary access token so we can 
+    make requests on behalf (as if we were) the user.
+    e.g. https://discordapp.com/api/users/@me
+    The token is stored in a session variable, so it can
+    be reused across separate web requests.
+    """
+    discord_token = OAuth2Session(client_id, redirect_uri=redirect_uri, state=session['state'], scope=scope)
+    
+    
+    token = discord_token.fetch_token(
+        token_url,
+        client_secret=discordkey,
+        authorization_response=request.url,
+    )
+    session['discord_token'] = token
+    
+    global response
+    discord = OAuth2Session(client_id, token=session['discord_token'])
+    response = discord.get(base_discord_api_url + '/users/@me')
+    # https://discordapp.com/developers/docs/resources/user#user-object-user-structure
+    if response.json()['verified']==True:
+        unique_id = response.json()["id"]
+        users_email = response.json()["email"]
+        picture = response.json()["avatar"]
+        users_name = response.json()["username"]
+        discriminator = response.json()["discriminator"]
+    else:
+        return "User email not available or not verified by Discord.", 400
+    
+    picture_url = get_avatar+unique_id+'/'+picture 
+    
+    user = User(
+    id_=unique_id, name=users_name, discriminator=discriminator, email=users_email, profile_pic_url=picture_url)
+    
+# Doesn't exist? Add it to the database.
+    if not User.get(unique_id):
+        User.create(unique_id,users_name, discriminator, users_email, picture_url)
 
-    return f"Success, logged in as {user}"
-    # return render_template('index.html')
+# Begin user session by logging the user in
+    login_user(user)
+
+# Send user back to homepage
+    return redirect('/')
 
 
-@app.get("/login")
-def redirect_to_discord():
-    return redirect(OAuth2.DISCORD_LOGIN_URL)
-
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for("home"))
 
 ########################## API #################################
 
@@ -101,4 +193,4 @@ def internal_server_error(error):  # TODO: better error handelling needed
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')

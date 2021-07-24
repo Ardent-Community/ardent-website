@@ -1,4 +1,5 @@
 import sqlite3
+from flask import g
 
 
 class SQLite3DatabaseHandler():
@@ -40,6 +41,52 @@ class SQLite3DatabaseHandler():
             out = cursor.execute(f"SELECT * FROM solution{challenge_num}")
 
         return out.fetchall()
+ #################login db###############################   
+
+def get_db():
+    if "db" not in g:
+        g.db = sqlite3.connect(
+            "login.db", detect_types=sqlite3.PARSE_DECLTYPES
+        )
+        g.db.row_factory = sqlite3.Row
+
+    return g.db
+
+def close_db(e=None):
+    db = g.pop("db", None)
+
+    if db is not None:
+        db.close()
+
+
+def init_app(app):
+    app.teardown_appcontext(close_db)
+  
+def makelogindb():    
+    conn = sqlite3.connect('login.db')
+
+#Creating a cursor object using the cursor() method
+    cursor = conn.cursor()
+
+#Doping EMPLOYEE table if already exists.
+    cursor.execute("DROP TABLE IF EXISTS user")
+
+#Creating table as per requirement
+    sql ="""CREATE TABLE user (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    discriminator TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    profile_pic_url TEXT NOT NULL
+    );"""
+    cursor.execute(sql)
+    
+
+# Commit your changes in the database
+    conn.commit()
+
+#Closing the connection
+    conn.close()
 
 
 if __name__ == "__main__":
