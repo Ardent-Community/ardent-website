@@ -25,6 +25,7 @@ authorize_url = 'https://discordapp.com/api/oauth2/authorize'
 seed=os.environ['CODE']
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
+
 app = Flask(__name__)
 db = SQLite3DatabaseHandler('solutions.db')
 app.config['SECRET_KEY']=discordkey
@@ -49,7 +50,6 @@ def load_user(user_id):
 
 @app.route("/")
 def home():
-    
     if current_user.is_authenticated:
 #         return (
 #             "<p>Hello, {}! You're logged in! Email: {}</p>"
@@ -191,7 +191,7 @@ def no_data(error):  # TODO: better error handelling needed
 @app.errorhandler(500)
 def internal_server_error(error):  # TODO: better error handelling needed
     return jsonify({"response_code": 500, "status": "NO data"})
-
+    # return render_template('tabbed.html')
 
 if __name__ == '__main__':
     app.run(debug=os.getenv("DEBUG")=="true", use_reloader=False, host='0.0.0.0', port=5000)
