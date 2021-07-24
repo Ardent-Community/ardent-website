@@ -51,16 +51,17 @@ def load_user(user_id):
 def home():
     
     if current_user.is_authenticated:
-        return (
-            "<p>Hello, {}! You're logged in! Email: {}</p>"
-            "<div><p>Discord Avatar:</p>"
-            '<img src="{}" alt="Discord avatar"></img></div>'
-            '<a class="button" href="/logout">Logout</a>'.format(
-                current_user.name, current_user.email, current_user.profile_pic_url
-            )
-        )
+#         return (
+#             "<p>Hello, {}! You're logged in! Email: {}</p>"
+#             "<div><p>Discord Avatar:</p>"
+#             '<img src="{}" alt="Discord avatar"></img></div>'
+#             '<a class="button" href="/logout">Logout</a>'.format(
+#                 current_user.name, current_user.email, current_user.profile_pic_url
+#             )
+#         )
+          return render_template('tabbed.html')  # TODO: make it look like you are loged in
     else:
-        return '<a class="button" href="/login">Discord Login</a>'
+        return render_template('tabbed.html')
     
     
     
@@ -193,4 +194,4 @@ def internal_server_error(error):  # TODO: better error handelling needed
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=os.getenv("DEBUG")=="true", use_reloader=False, host='0.0.0.0', port=5000)
