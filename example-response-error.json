@@ -1,0 +1,6 @@
+{
+    "error": "Unable to recognize the User-Agent, check the API key",
+    "message": "Access denied",
+    "ok": false,
+    "solutions": {}
+}
