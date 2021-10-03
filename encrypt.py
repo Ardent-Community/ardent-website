@@ -2,7 +2,9 @@ from base64 import b64encode
 import hashlib
 from Cryptodome.Cipher import AES
 from Cryptodome.Random import get_random_bytes
-def Encrypt(uid , seed):
+
+
+def Encrypt(uid, seed):
     plain_text = uid
 
     # generate a random salt
@@ -18,7 +20,7 @@ def Encrypt(uid , seed):
         r=8,
         p=1,
         dklen=32,
-        )
+    )
 
     # create cipher config
 
@@ -26,16 +28,20 @@ def Encrypt(uid , seed):
 
     # return a dictionary with the encrypted text
 
-    (cipher_text, tag) = \
-        cipher_config.encrypt_and_digest(bytes(plain_text, 'utf-8'))
+    (cipher_text, tag) = cipher_config.encrypt_and_digest(bytes(plain_text, "utf-8"))
     encryptedDict = {
-        'cipher_text': b64encode(cipher_text).decode('utf-8'),
-        'salt': b64encode(salt).decode('utf-8'),
-        'nonce': b64encode(cipher_config.nonce).decode('utf-8'),
-        'tag': b64encode(tag).decode('utf-8'),
-        }
-    encryptedString = encryptedDict['cipher_text'] + '*' \
-        + encryptedDict['salt'] + '*' + encryptedDict['nonce'] + '*' \
-        + encryptedDict['tag']
+        "cipher_text": b64encode(cipher_text).decode("utf-8"),
+        "salt": b64encode(salt).decode("utf-8"),
+        "nonce": b64encode(cipher_config.nonce).decode("utf-8"),
+        "tag": b64encode(tag).decode("utf-8"),
+    }
+    encryptedString = (
+        encryptedDict["cipher_text"]
+        + "*"
+        + encryptedDict["salt"]
+        + "*"
+        + encryptedDict["nonce"]
+        + "*"
+        + encryptedDict["tag"]
+    )
     return encryptedString
-
